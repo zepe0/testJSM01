@@ -43,9 +43,13 @@
 #encuestaOpen {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 label {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.m-t{
+  margin-top: 8px;
 }

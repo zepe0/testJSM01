@@ -1,0 +1,41 @@
+#toast {
+  position: fixed;
+
+  left: 50%;
+  background-color: #333;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(-50%); /* Centrar verticalmente */
+  animation: slideInRight 3s forwards;
+}
+@keyframes slideInRight {
+  0% {
+    top: -30px;
+  }
+  50% {
+    top: 25px;
+  }
+  100% {
+    top: -30px;
+  }
+}
+
+#toast.error {
+  background-color: #d9534f;
+}
+
+#toast.success {
+  background-color: #5cb85c;
+}
+
+.hidden {
+  display: none;
+}
