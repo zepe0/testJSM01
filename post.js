@@ -61,7 +61,7 @@ function options() {
   modal.innerHTML = "";
 
   if (localStorage.encuesta) {
-    buttons.innerHTML = `<input id="nombreopcion"/><button id="addOpcion">+</button>`;
+    buttons.innerHTML = `<input id="nombreopcion" placeholder="Nueva opción"/><span id="count"></span><button id="addOpcion">+</button>`;
     let lista = JSON.parse(localStorage.encuesta);
     lista.forEach((op) => {
       let article = document.createElement("article");
@@ -90,12 +90,27 @@ function options() {
     `;
   }
 
-  addOptionEventListener(); // Register event listener again
+  addOptionEventListener();
 }
 
 function addOptionEventListener() {
   var modal = document.getElementById("encuestaOpen");
+
   const addoption = document.getElementById("addOpcion");
+  var nombreOpcion = document.getElementById("nombreopcion");
+  var countSpan = document.getElementById("count");
+
+  if (nombreOpcion && countSpan) {
+    nombreOpcion.addEventListener("input", function () {
+      if (nombreOpcion.value.length <= 25) {
+        countSpan.innerText = nombreOpcion.value.length + "/25";
+      }
+
+      if (nombreOpcion.value.length > 25) countSpan.innerText = 25;
+      nombreOpcion.value = nombreOpcion.value.substring(0, 25);
+      debugger;
+    });
+  }
 
   if (addoption) {
     addoption.addEventListener("click", function () {
