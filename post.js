@@ -12,35 +12,83 @@ function addpost() {
   var modal = document.getElementById("encuestaOpen");
   var list = document.getElementById("listpost");
   list.innerHTML = "";
+
+  // Mostrar encuestas ya almacenadas en localStorage.list
+  if (localStorage.list) {
+    const listpost = JSON.parse(localStorage.list);
+    listpost.forEach((encuesta) => {
+      const section = document.createElement("section");
+      section.innerHTML = `
+        <h3>${encuesta.titel}</h3>
+        <article class="optionsencuestas">
+        </article>
+      `;
+      const listoptions = section.querySelector(".optionsencuestas");
+      encuesta.opc.forEach((opcencuesta) => {
+        listoptions.innerHTML += `<input name="options" value="${opcencuesta}" />`;
+      });
+      list.appendChild(section);
+    });
+  }
+
+  // Añadir nuevas encuestas desde localStorage.encuesta
   if (!localStorage.encuesta) {
     showToast("campos vacios");
   } else {
     const encuestas = JSON.parse(localStorage.encuesta);
-    encuestas.map((encuesta) => {
-      const section = document.createElement("section");
-      // TODO add estilo
-      if (encuesta.opc.length <= 1) {
+    encuestas.forEach((encuesta) => {
+      if (encuesta.opc.length === 0) {
         showToast(
           "se necesitan al menos dos opciones para hacer encuesta",
           "error"
         );
         return null;
       } else {
+        const section = document.createElement("section");
+        // TODO add estilo
         section.innerHTML = `
-        <h3>${encuesta.titel}</h3>
-        <article class="optionsencuestas">
-        </article>
-      `;
+          <h3>${encuesta.titel}</h3>
+          <article class="optionsencuestas">
+          </article>
+        `;
+
         const listoptions = section.querySelector(".optionsencuestas");
         encuesta.opc.forEach((opcencuesta) => {
           listoptions.innerHTML += `<input name="options" value="${opcencuesta}" />`;
         });
-        list.appendChild(section);
-        delete localStorage.encuesta;
+        /*    list.appendChild(section); */
+        debugger;
+        const list = document.getElementById("listpost").appendChild(section);
+
+        if (localStorage.list) {
+          const listpost = JSON.parse(localStorage.list);
+          listpost.push(encuesta);
+          localStorage.setItem("list", JSON.stringify(listpost));
+          const nombre = document.getElementById("encuestaOpen");
+          const btn = document.getElementById("btn");
+          debugger;
+          var coments = document.getElementById("textcoment");
+          nombre.classList.add("hiden");
+          btn.classList.add("hiden");
+          coments.classList.remove("hiden");
+        } else {
+          localStorage.setItem("list", JSON.stringify([encuesta]));
+          const nombre = document.getElementById("encuestaOpen");
+          const btn = document.getElementById("btn");
+          debugger;
+          var coments = document.getElementById("textcoment");
+          nombre.classList.add("hiden");
+          btn.classList.add("hiden");
+          coments.classList.remove("hiden");
+        }
       }
     });
 
-    modal.innerHTML = `
+    // Eliminar la encuesta del localStorage una vez añadida a list
+    delete localStorage.encuesta;
+  }
+
+  modal.innerHTML = `
     <label>
       <input id="nombreTitulo" placeholder="Título de la encuesta" />
     </label>
@@ -49,18 +97,20 @@ function addpost() {
     <button id="addOpcion">+</button>
   `;
 
-    addOptionEventListener(); // Register event listener again
-  }
+  addOptionEventListener();
 }
 
 function options() {
   var buttons = document.getElementById("btn");
-  var coments = document.getElementById("coment");
+  var coments = document.getElementById("textcoment");
   var modal = document.getElementById("encuestaOpen");
-
   modal.innerHTML = "";
+  if (modal.classList[0] === "hiden") {
+    modal.classList.remove("hiden");
+  }
 
   if (localStorage.encuesta) {
+    buttons.classList.remove("hiden");
     buttons.innerHTML = `<input id="nombreopcion" placeholder="Nueva opción"/><span id="count"></span><button id="addOpcion">+</button>`;
     let lista = JSON.parse(localStorage.encuesta);
     lista.forEach((op) => {
@@ -80,12 +130,13 @@ function options() {
       modal.appendChild(article);
     });
   } else {
+    coments.classList.add("hiden");
     modal.innerHTML = `
       <label>
         <input id="nombreTitulo" placeholder="Título de la encuesta" />
       </label>
       <label>Nueva opción</label>
-      <input id="nombreopcion" placeholder="Nueva opción"/>
+      <input id="nombreopcion" placeholder="Nueva opción"/><span id="count"></span>
       <button id="addOpcion">+</button>
     `;
   }
