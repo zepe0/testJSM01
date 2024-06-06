@@ -28,7 +28,7 @@ function voto(data) {
           event.target.classList.add("select");
           const span = document.createElement("span");
           span.textContent = "tu voto";
-          event.target.insertAdjacentElement("afterend",span);
+          event.target.insertAdjacentElement("afterend", span);
 
           seccion.dataset.votado = "true";
 
@@ -50,6 +50,7 @@ function addpost() {
     const listpost = JSON.parse(localStorage.list);
     listpost.forEach((encuesta) => {
       const section = document.createElement("section");
+      section.classList.add("votos");
 
       section.innerHTML = `
         <h3>${encuesta.titel}</h3>
@@ -61,6 +62,9 @@ function addpost() {
 
       encuesta.opc.forEach((opcencuesta) => {
         const id = generateObjectId();
+        const div = document.createElement("div");
+        div.classList.add("svotos");
+        
         const button = document.createElement("button");
         button.name = "options";
         button.setAttribute("id", id);
@@ -69,8 +73,8 @@ function addpost() {
         button.onclick = function () {
           voto(button);
         };
-
-        listoptions.appendChild(button);
+        div.appendChild(button);
+        listoptions.appendChild(div);
       });
       list.appendChild(section);
     });
