@@ -8,30 +8,74 @@ document.addEventListener("DOMContentLoaded", function () {
   newpost.addEventListener("click", addpost);
 });
 
+function generateObjectId() {
+  const timestamp = Date.now().toString(16);
+  const random = Array.from({ length: 16 }, () =>
+    Math.floor(Math.random() * 16).toString(16)
+  ).join("");
+
+  return timestamp + random;
+}
+
+function voto(data) {
+  const btnselec = document.getElementById(data.id);
+
+  document.querySelectorAll("section").forEach((seccion) => {
+    const botones = seccion.querySelectorAll("button");
+    botones.forEach((boton) => {
+      boton.addEventListener("click", (event) => {
+        if (!seccion.dataset.votado) {
+          event.target.classList.add("select");
+          const span = document.createElement("span");
+          span.textContent = "tu voto";
+          event.target.insertAdjacentElement("afterend",span);
+
+          seccion.dataset.votado = "true";
+
+          botones.forEach((boton) => {
+            boton.disabled = true;
+          });
+        }
+      });
+    });
+  });
+}
+
 function addpost() {
   var modal = document.getElementById("encuestaOpen");
   var list = document.getElementById("listpost");
   list.innerHTML = "";
 
-  // Mostrar encuestas ya almacenadas en localStorage.list
   if (localStorage.list) {
     const listpost = JSON.parse(localStorage.list);
     listpost.forEach((encuesta) => {
       const section = document.createElement("section");
+
       section.innerHTML = `
         <h3>${encuesta.titel}</h3>
         <article class="optionsencuestas">
         </article>
       `;
+
       const listoptions = section.querySelector(".optionsencuestas");
+
       encuesta.opc.forEach((opcencuesta) => {
-        listoptions.innerHTML += `<input name="options" value="${opcencuesta}" />`;
+        const id = generateObjectId();
+        const button = document.createElement("button");
+        button.name = "options";
+        button.setAttribute("id", id);
+        button.value = opcencuesta;
+        button.textContent = opcencuesta;
+        button.onclick = function () {
+          voto(button);
+        };
+
+        listoptions.appendChild(button);
       });
       list.appendChild(section);
     });
   }
 
-  // Añadir nuevas encuestas desde localStorage.encuesta
   if (!localStorage.encuesta) {
     showToast("campos vacios");
   } else {
@@ -54,7 +98,7 @@ function addpost() {
 
         const listoptions = section.querySelector(".optionsencuestas");
         encuesta.opc.forEach((opcencuesta) => {
-          listoptions.innerHTML += `<input name="options" value="${opcencuesta}" />`;
+          listoptions.innerHTML += `<button name="options" value="${opcencuesta}" > </button>`;
         });
         /*    list.appendChild(section); */
         debugger;
@@ -84,7 +128,6 @@ function addpost() {
       }
     });
 
-    // Eliminar la encuesta del localStorage una vez añadida a list
     delete localStorage.encuesta;
   }
 
