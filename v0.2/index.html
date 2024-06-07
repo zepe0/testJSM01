@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encuesta</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="index.js"></script>
+  </head>
+  <body>
+    <div class="card">
+      <div class="user-info">
+        <img src="user-photo.jpg" alt="Foto del usuario" class="user-photo" />
+        <span class="user-name">Nombre del Usuario</span>
+      </div>
+      <div class="open-poll">
+        <button id="open-poll-btn">Crear Encuesta</button>
+      </div>
+      <form id="poll-form" class="hidden">
+        <input
+          type="text"
+          id="poll-title"
+          placeholder="Título de la encuesta"
+          required
+        />
+        <div id="options-container"></div>
+        <button type="button" id="add-option">Añadir opción</button>
+        <button type="submit">Publicar</button>
+      </form>
+    </div>
+    <div id="poll-list"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
