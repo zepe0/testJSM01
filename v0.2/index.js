@@ -20,10 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const emojiFaces = document.createElement("button");
     const emojiAnimals = document.createElement("button");
     const emojiFruits = document.createElement("button");
-    emojiFaces.innerHTML = data["Emoticonos y personas"];
-    emojiAnimals.innerHTML = data["Emoticonos y personas"];
-    emojiFruits.innerHTML = data["Emoticonos y personas"];
-    emojiPicker.appendChild(emojiFaces, emojiAnimals, emojiFruits);
+    emojiFaces.innerHTML = data["Emoticonos y personas"][0];
+    emojiAnimals.innerHTML = data["Animales y naturaleza"][0];
+    emojiFruits.innerHTML = data["Comida y bebida"][0];
+    emojiPicker.appendChild(emojiFaces);
+    emojiPicker.appendChild(emojiAnimals);
+    emojiPicker.appendChild(emojiFruits);
 
     btnIcon.appendChild(emojiPicker);
   });
