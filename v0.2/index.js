@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     emojiPicker.appendChild(emojiAnimals);
     emojiPicker.appendChild(emojiFruits);
 
-    btnIcon.appendChild(emojiPicker);
+    btnIcon.after(emojiPicker);
   });
 
   openPollBtn.addEventListener("click", () => {
