@@ -1,3 +1,5 @@
+import { showToast } from "./toast.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const pollForm = document.getElementById("poll-form");
   const addOptionBtn = document.getElementById("add-option");
@@ -18,8 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     let existingPicker = document.querySelector(".emoji-categories");
+
     if (existingPicker) {
       existingPicker.remove();
+      document.getElementById("ContentIconList").remove();
+      return;
     }
 
     const emojiPicker = document.createElement("div");
@@ -42,17 +47,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const familyIcons = data[e.target.textContent];
         if (!familyIcons) return;
+        const existIconList = document.getElementById("divIcons");
+        if (existIconList) existIconList.remove();
         const iconList = document.createElement("div");
+        iconList.id = "divIcons";
         const emojiList = document.createElement("ul");
-       emojiList.classList.add("p-l0")
+        emojiList.classList.add("emoji-categories");
+
+        emojiList.classList.add("p-l0");
         emojiList.id = "ContentIconList";
         emojiList.classList.add("emoji-list");
-        ;
         iconList.appendChild(emojiList);
         emojiPicker.after(iconList);
 
         familyIcons.forEach((iconFamili, emojiIndex) => {
           const emojiItem = document.createElement("button");
+
           emojiItem.type = "button";
           emojiItem.classList.add("emoji-button");
           emojiItem.textContent = iconFamili;
@@ -64,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const input = document.getElementById("TextContentPost");
             input.value += e.target.textContent;
             input.innerText = input.value;
-            console.log(input);
+            input.focus();
           });
         });
       });
@@ -98,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   addOptionBtn.addEventListener("click", () => {
-    if (optionCount < 10) {
+    if (optionCount < 3) {
       const optionDiv = document.createElement("div");
       optionDiv.className = "option-input";
       const optionInput = document.createElement("input");
@@ -120,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       optionsContainer.appendChild(optionDiv);
       optionCount++;
     } else {
-      alert("No se pueden añadir más de 10 opciones.");
+      showToast("No se pueden añadir más de 4 opciones.", "error");
     }
   });
 
@@ -132,16 +142,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const options = Array.from(
       document.querySelectorAll(".option-input input")
     ).map((input) => input.value);
-    createPoll(pollTitle, options);
+    if (options.length <= 1) {
+      let emptys = 2 - options.length;
+      showToast(
+        `Se necesitan al menos 2 opciones para poder hacer una encuesta, faltan ${emptys} opción mas`,
+        "error"
+      );
+    } else {
+      createPoll(pollTitle, options);
 
-    pollForm.reset();
+      pollForm.reset();
 
-    optionsContainer.innerHTML = "";
-    optionCount = 0;
+      optionsContainer.innerHTML = "";
+      optionCount = 0;
 
-    pollForm.classList.add("hidden");
-    openPost.classList.remove("hidden");
-    formPost.classList.add("hidden");
+      pollForm.classList.add("hidden");
+      openPost.classList.remove("hidden");
+      formPost.classList.add("hidden");
+    }
   });
 
   function createPoll(title, options) {
