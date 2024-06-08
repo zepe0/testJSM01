@@ -10,22 +10,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let optionCount = 0;
   let data = {
-    "Emoticonos y personas": ["😀", "😁", "😂", "🤣"],
-    "Animales y naturaleza": ["🐶", "🐱", "🐭", "🐹"],
-    "Comida y bebida": ["🍏", "🍎", "🍐", "🍊"],
+    "😷": ["😀", "😁", "😂", "🤣"],
+    "🐕 ": ["🐶", "🐱", "🐭", "🐹"],
+    "🍩": ["🍏", "🍎", "🍐", "🍊"],
   };
+  btnIcon.addEventListener("click", (e) => {
+    e.preventDefault();
 
-  btnIcon.addEventListener("click", () => {
+    let existingPicker = document.querySelector(".emoji-categories");
+    if (existingPicker) {
+      existingPicker.remove();
+    }
+
     const emojiPicker = document.createElement("div");
-    const emojiFaces = document.createElement("button");
-    const emojiAnimals = document.createElement("button");
-    const emojiFruits = document.createElement("button");
-    emojiFaces.innerHTML = data["Emoticonos y personas"][0];
-    emojiAnimals.innerHTML = data["Animales y naturaleza"][0];
-    emojiFruits.innerHTML = data["Comida y bebida"][0];
-    emojiPicker.appendChild(emojiFaces);
-    emojiPicker.appendChild(emojiAnimals);
-    emojiPicker.appendChild(emojiFruits);
+    emojiPicker.classList.add("emoji-categories");
+
+    Object.keys(data).forEach((catIcon, index) => {
+      const emojiFaces = document.createElement("button");
+      emojiFaces.type = "button";
+      emojiFaces.classList.add("emoji-button");
+      emojiFaces.textContent = catIcon;
+      emojiFaces.id = `category-${index}`;
+
+      emojiFaces.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        let existingList = document.getElementById("ContentIconList");
+        if (existingList) {
+          existingList.remove();
+        }
+
+        const familyIcons = data[e.target.textContent];
+        if (!familyIcons) return;
+        const iconList = document.createElement("div");
+        const emojiList = document.createElement("ul");
+       emojiList.classList.add("p-l0")
+        emojiList.id = "ContentIconList";
+        emojiList.classList.add("emoji-list");
+        ;
+        iconList.appendChild(emojiList);
+        emojiPicker.after(iconList);
+
+        familyIcons.forEach((iconFamili, emojiIndex) => {
+          const emojiItem = document.createElement("button");
+          emojiItem.type = "button";
+          emojiItem.classList.add("emoji-button");
+          emojiItem.textContent = iconFamili;
+          emojiItem.id = `emoji-${index}-${emojiIndex}`;
+          emojiList.appendChild(emojiItem);
+
+          emojiItem.addEventListener("click", (e) => {
+            e.preventDefault();
+            const input = document.getElementById("TextContentPost");
+            input.value += e.target.textContent;
+            input.innerText = input.value;
+            console.log(input);
+          });
+        });
+      });
+
+      emojiPicker.appendChild(emojiFaces);
+    });
 
     btnIcon.after(emojiPicker);
   });
@@ -33,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
   openPollBtn.addEventListener("click", () => {
     pollForm.classList.toggle("hidden");
     openPost.classList.toggle("hidden");
+
     if (openPollBtn.textContent === "Crear Encuesta")
       openPollBtn.textContent = "Cerrar Encuesta";
     else {
@@ -43,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   openPost.addEventListener("click", () => {
     openPollBtn.classList.toggle("hidden");
     formPost.classList.toggle("hidden");
+
     if (openPost.textContent === "Crear Post")
       openPost.textContent = "Cerrar Post";
     else {
@@ -59,12 +106,15 @@ document.addEventListener("DOMContentLoaded", () => {
       optionInput.placeholder = `Opción ${optionCount + 1}`;
       optionInput.maxLength = 25;
       optionInput.required = true;
+
       const charCount = document.createElement("span");
       charCount.className = "char-count";
       charCount.textContent = "25";
+
       optionInput.addEventListener("input", () => {
         charCount.textContent = 25 - optionInput.value.length;
       });
+
       optionDiv.appendChild(optionInput);
       optionDiv.appendChild(charCount);
       optionsContainer.appendChild(optionDiv);
@@ -76,23 +126,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   pollForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    openPollBtn.textContent = "Crear Encuesta";
+
     const pollTitle = document.getElementById("poll-title").value;
     const options = Array.from(
       document.querySelectorAll(".option-input input")
     ).map((input) => input.value);
     createPoll(pollTitle, options);
+
     pollForm.reset();
+
     optionsContainer.innerHTML = "";
     optionCount = 0;
+
     pollForm.classList.add("hidden");
+    openPost.classList.remove("hidden");
+    formPost.classList.add("hidden");
   });
 
   function createPoll(title, options) {
     const pollDiv = document.createElement("div");
     pollDiv.className = "poll";
+
     const pollTitle = document.createElement("h3");
     pollTitle.textContent = title;
+
     pollDiv.appendChild(pollTitle);
+
+    formPost.classList.remove("hidden");
 
     options.forEach((option) => {
       const optionDiv = document.createElement("div");
@@ -100,9 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const optionLabel = document.createElement("span");
       optionLabel.textContent = option;
       optionLabel.className = "option-label";
+
       const progressBar = document.createElement("div");
       progressBar.className = "progress-bar";
       progressBar.dataset.value = 0;
+
       optionDiv.appendChild(optionLabel);
       optionDiv.appendChild(progressBar);
       pollDiv.appendChild(optionDiv);
@@ -122,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateVotes(pollDiv, selectedOption) {
     const options = pollDiv.querySelectorAll(".progress-bar-container");
+
     const totalVotes =
       Array.from(options).reduce((sum, option) => {
         const progressBar = option.querySelector(".progress-bar");
@@ -131,9 +195,11 @@ document.addEventListener("DOMContentLoaded", () => {
     options.forEach((option) => {
       const progressBar = option.querySelector(".progress-bar");
       const optionLabel = option.querySelector(".option-label");
+
       if (optionLabel.textContent === selectedOption) {
         progressBar.dataset.value = parseInt(progressBar.dataset.value) + 1;
       }
+
       const percentage =
         (parseInt(progressBar.dataset.value) / totalVotes) * 100;
       progressBar.style.width = `${percentage}%`;
