@@ -104,12 +104,44 @@ body {
 #poll-list {
   margin-top: 20px;
 }
+.poll {
+  /*   width: 100%;
+  padding: 8px; */
+  margin-top: 10px;
+
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
 .progress-bar-container {
   margin-top: 10px;
-  background-color: #f1f1f1;
+  background-color: #f3eded86;
   border-radius: 5px;
   overflow: hidden;
+  gap: 8px;
   position: relative;
+  padding: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+h2{
+  margin-top: 10px;
+  background-color: #f3eded86;
+  border-radius: 5px;
+  overflow: hidden;
+  gap: 8px;
+  position: relative;
+  padding: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+h3{
+  text-align: center;
 }
 
 .progress-bar {
@@ -120,6 +152,9 @@ body {
   color: #fff;
   text-align: center;
   transition: width 0.5s;
+  display: flex;
+  border-radius: 20px;
+  justify-content: center;
 }
 
 /* ICONS */

@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const formPost = document.getElementById("post");
   const btnIcon = document.getElementById("add-emoji");
 
+  let countVot = 0;
   let optionCount = 0;
   let data = {
     "😷": ["😀", "😁", "😂", "🤣"],
@@ -162,6 +163,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  formPost.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const textpost = document.getElementById("TextContentPost");
+    const text = textpost.value;
+    createPost(text);
+    formPost.reset();
+  });
+
+  function createPost(text) {
+    const pollpost = document.createElement("div");
+    pollpost.className = "poll";
+
+    const polltext = document.createElement("h2");
+    polltext.textContent = text;
+
+    pollpost.appendChild(polltext);
+    pollList.appendChild(pollpost);
+  }
+
   function createPoll(title, options) {
     const pollDiv = document.createElement("div");
     pollDiv.className = "poll";
@@ -172,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pollDiv.appendChild(pollTitle);
 
     formPost.classList.remove("hidden");
-
+    if (!options) return;
     options.forEach((option) => {
       const optionDiv = document.createElement("div");
       optionDiv.className = "progress-bar-container";
@@ -189,11 +209,23 @@ document.addEventListener("DOMContentLoaded", () => {
       pollDiv.appendChild(optionDiv);
 
       optionDiv.addEventListener("click", (event) => {
-        const confirmed = confirm(
-          "¿Estás seguro de que quieres cambiar tu opción de voto?"
-        );
-        if (confirmed) {
+        debugger;
+        if (countVot === 0) {
           updateVotes(pollDiv, optionLabel.textContent);
+          countVot++;
+        } else {
+          const confirmed = confirm(
+            `
+            ¿Estás seguro de que quieres cambiar tu opción de voto?
+           
+            al confirmar se se cambiara el Voto !
+
+            Se sumara par Modificar el progreso"
+          `
+          );
+          if (confirmed) {
+            updateVotes(pollDiv, optionLabel.textContent);
+          }
         }
       });
     });
