@@ -17,9 +17,9 @@ $titulo = "FOO";
 
 $data = [];
 /* SELECT u.id as idUser, u.email, e.tituloEncuesta, o.opcion FROM user u, encuesta e LEFT JOIN opciones o ON o.idEncuesta=e.id WHERE e.idUser=u.id AND e.id=45; */
+/* SELECT * FROM `resultado` WHERE idEncuesta=45 AND idOpcion=3; */
 
-
-$sql = 'SELECT u.id as idUser, u.email, e.tituloEncuesta, o.opcion FROM user u, encuesta e LEFT JOIN opciones o ON o.idEncuesta=e.id WHERE e.idUser=u.id;';
+$sql = 'SELECT u.id as idUser, u.email, e.tituloEncuesta, o.opcion, e.id FROM user u, encuesta e LEFT JOIN opciones o ON o.idEncuesta=e.id WHERE e.idUser=u.id;';
 try {
 
     $query = $conexion->prepare($sql);
@@ -39,7 +39,7 @@ try {
 
         $data = ["msn" => "Sin amigos"];
     }
-} catch (\Throwable $e) {
+} catch (\Throwable $e) { 
     $data['success'] = false;
     $data['msn'] = "Error en la base de datos: " . $e->getMessage();
 }
