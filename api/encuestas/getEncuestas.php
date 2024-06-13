@@ -18,10 +18,10 @@ $titulo = "FOO";
 $data = [];
 /* SELECT u.id as idUser, u.email, e.tituloEncuesta, o.opcion FROM user u, encuesta e LEFT JOIN opciones o ON o.idEncuesta=e.id WHERE e.idUser=u.id AND e.id=45; */
 /* SELECT * FROM `resultado` WHERE idEncuesta=45 AND idOpcion=3;
-TOTAL REsultados -> SELECT r.idOpcion, o.opcion AS nombre_opcion, COUNT(*) AS total FROM resultado r JOIN opciones o ON r.idOpcion = o.idOpcion GROUP BY r.idOpcion, o.opcion;
+devolver encuestas -> SELECT u.id as idUser,  e.tituloEncuesta, o.opcion, o.idOpcion, e.idEncuesta FROM user u, encuesta e LEFT JOIN opciones o ON o.idEncuesta=e.idEncuesta WHERE e.idUser=u.id;
 */
 
-$sql = 'SELECT u.id as idUser,  e.tituloEncuesta, o.opcion, o.idOpcion, e.idEncuesta FROM user u, encuesta e LEFT JOIN opciones o ON o.idEncuesta=e.idEncuesta WHERE e.idUser=u.id;';
+$sql = 'SELECT e.idEncuesta, o.idOpcion, o.opcion, COUNT(r.idOpcion) AS total_votos FROM encuesta e LEFT JOIN opciones o ON o.idEncuesta = e.idEncuesta  JOIN resultado r ON r.idOpcion = o.idOpcion GROUP BY e.idEncuesta, o.idOpcion, o.opcion;';
 try {
 
     $query = $conexion->prepare($sql);
