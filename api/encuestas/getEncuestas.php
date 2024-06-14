@@ -36,7 +36,7 @@ try {
         while ($fila = $result->fetch_assoc()) {
 
             $data["encuesta"][] = $fila;
-            var_dump($fila["idOpcion"]);
+            
         }
     } else {
 
